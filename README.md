@@ -38,6 +38,7 @@ This is Lexi's `instructions()` idea (identity + domain + boot + scratch + missi
 |---|---|
 | `CatalogRead` | Read `catalog.json`. List or one id. |
 | `HeartbeatRead` | kitd / vite / blender stamp. |
+| `BoardWrite` | Flock-upsert `board.json`. Grok sessions use `bin/board-write`. |
 | `LookReport` | Last Playwright `report.json`. Does not run the suite. |
 | `YouTubeTranscript` | Full captions via `yt-dlp` (timestamps). Not Lexi's 8k clip. |
 | `MemoryStore` / `MemorySearch` | File-backed `knowledge_kilt`. |

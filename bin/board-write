@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Grok / factory sessions: flock-write the canonical board. Not a Mattermost mouth.
+# Usage: bin/board-write <id> <state> [--lifecycle=cut] [--owner=kit] [--issue=4] [--pr=URL] [--note=...]
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+exec php "$ROOT/artisan" kit:board "$@"

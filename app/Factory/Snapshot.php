@@ -13,7 +13,9 @@ class Snapshot
             $this->catalogLine(),
             $this->lookLine(),
             $this->heartbeatLine(),
+            $this->boardLine(),
             $this->gitLine(),
+            'Snapshot is truth. Older chat or memory that disagrees is stale.',
         ];
 
         return implode("\n", $lines);
@@ -73,6 +75,30 @@ class Snapshot
         }
 
         return '- kitd: unknown';
+    }
+
+    private function boardLine(): string
+    {
+        $path = (string) config('kit.board_path');
+        if ($path === '' || ! is_file($path)) {
+            return '- board: (none)';
+        }
+
+        $data = json_decode((string) File::get($path), true);
+        $items = is_array($data) ? ($data['items'] ?? []) : [];
+        $bits = [];
+        foreach ($items as $row) {
+            if (! is_array($row) || ! isset($row['id'])) {
+                continue;
+            }
+            $bit = $row['id'].'='.($row['state'] ?? '');
+            if (! empty($row['lifecycle'])) {
+                $bit .= '/'.$row['lifecycle'];
+            }
+            $bits[] = $bit;
+        }
+
+        return '- board: '.($bits === [] ? '(empty)' : implode('; ', $bits));
     }
 
     private function gitLine(): string
