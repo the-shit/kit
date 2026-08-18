@@ -1,0 +1,8 @@
+- Default ride kit: flip-flops, bare feet, shorts, tee. Never socks. No helmet.
+- Body lock: 6'4" / 320 lb. Start from Blender Studio Human Base Meshes (CC0 stylized male), not cubes.
+- Catalog ids only. `public/models/catalog.json` is the file API. No new gameplay GLB paths.
+- Files under ~300 lines. Systems talk via events/state, not each other's internals.
+- AI guesses shape (Comfy/TRELLIS/Hunyuan). Blender makes the game asset (meters, origin, sockets).
+- Rider is M1-locked unless Jordan reopens clothes. Next mesh is hero-ebike.
+- You cannot set your own Mattermost avatar (bot 403). Ask Lexi `SetProfilePhoto`.
+- Sibling on Loki. Not a citizen inside Lexi's process. lexi#699 stays closed.

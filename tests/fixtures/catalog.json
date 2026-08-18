@@ -1,0 +1,6 @@
+{
+  "assets": [
+    {"id": "rider", "url": "/models/rider/rider.glb"},
+    {"id": "hero-ebike", "url": "/models/bike/hero-ebike.glb"}
+  ]
+}
