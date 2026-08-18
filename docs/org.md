@@ -12,18 +12,20 @@ The product is **photo → catalog-ready GLB** (look report included). bikes-v2 
 
 Hire in this order. A seat is a `laravel/ai` agent with 4–8 tools, one queue, one Mattermost handle. Not a Filament app.
 
+Jordan 2026-08-17: **Feel first**, then Bench.
+
 | # | Seat | Owns | Does not own |
 |---|---|---|---|
 | 1 | **Kit** | Catalog, factory lead, mouth | Jordan’s life, combat internals |
-| 2 | **Night** | Heartbeat, log parse, morning digest | Gameplay |
-| 3 | **Gate** | `npm run quality`, “red CI blocks” | Taste |
-| 4 | **Look** | Playwright look-compare | Authoring meshes |
-| 5 | **Bench** | Blender/bpy on Loki | Catalog ids |
-| 6 | **Print** | Imagine stills / albedo / clothes refs | Shipping GLBs |
-| 7 | **Clip** | Sit, pedal, swing, hop clips | Physics |
-| 8 | **Lot** | 7620, palms, lot signs | OSM crawl at large |
-| 9 | **Horde** | Shambler presentation | AI spawn rates |
-| 10 | **Feel** | Wheels, lean, chase-cam read | Bike physics constants |
+| 2 | **Feel** | Touch intents, hop/swing pad, spawn cam | Bike physics, melee math |
+| 3 | **Bench** | Blender/bpy on Loki | Catalog ids |
+| 4 | **Night** | Heartbeat, log parse, morning digest | Gameplay |
+| 5 | **Gate** | `npm run quality`, “red CI blocks” | Taste |
+| 6 | **Look** | Playwright look-compare | Authoring meshes |
+| 7 | **Print** | Imagine stills / albedo / clothes refs | Shipping GLBs |
+| 8 | **Clip** | Sit, pedal, swing, hop clips | Physics |
+| 9 | **Lot** | 7620, palms, lot signs | OSM crawl at large |
+| 10 | **Horde** | Shambler presentation | AI spawn rates |
 
 Feel/Horde/Lot *brief* playables. They do not edit `src/bike/physics.ts` or `src/combat/*` unless Gate + Kit say the brief is graphical.
 
@@ -70,4 +72,4 @@ Odin feeling slow from the work laptop is expected: Tailscale + a small box + Qd
 
 ## Do not spawn tonight
 
-Do not stand up 10 empty agents. Next three seats after Kit: **Night**, **Gate**, **Look**. They make the other seven safe to leave running. Lexi MCP 500’d when Kit asked; try her again before hiring.
+Do not stand up 10 empty agents. First hire after Kit is **Feel** (phone/hop/spawn). Then **Bench**. Night/Gate/Look make the rest safe to leave running.
