@@ -1,0 +1,11 @@
+{
+    "name": "Bench",
+    "handle": "bench",
+    "born_at": "2026-08-18",
+    "purpose": "Blender factory hands. bpy, HBM garments, ranch massing. Not catalog ids. Not physics.",
+    "knowledge_namespace": "knowledge_kilt",
+    "machine": "loki",
+    "owner_id": "jordan",
+    "relations": ["kit", "lexi"],
+    "reports_to": "kit"
+}
