@@ -42,6 +42,7 @@ This is Lexi's `instructions()` idea (identity + domain + boot + scratch + missi
 | `YouTubeTranscript` | Full captions via `yt-dlp` (timestamps). Not Lexi's 8k clip. |
 | `MemoryStore` / `MemorySearch` | File-backed `knowledge_kilt`. |
 | `AskLexi` | Shells to `~/.grok/kit/ask-lexi` (her MCP). Taste / life only. |
+| `ChannelCreate` | Find or create a Mattermost open channel. `php artisan kit:channel` / `mm create`. |
 
 Next (not built): `BlenderRun`, `LookCompare` (run Playwright), `GitHubOpenIssue`.
 
