@@ -7,10 +7,13 @@ SDK: **[laravel/ai](https://laravel.com/docs/ai-sdk)** (`BaseAgent` + tools). We
 ```
 GET  /health
 POST /api/ask                  Bearer KIT_PEER_TOKEN  {"message":"..."}
-POST /api/webhooks/mattermost  token=KIT_WEBHOOK_TOKEN
+POST /api/webhooks/mattermost  token=KIT_WEBHOOK_TOKEN  → queues ReplyOnMattermost
+php artisan queue:work --queue=kit
 php artisan kit:ask "what's in the catalog?"
 php artisan kit:ask --prompt   # dump assembled instructions
 ```
+
+Queue is Laravel `database` (sqlite), not Horizon. Horizon is Redis + a dashboard; Loki has neither. Add Horizon when Redis exists and there is more than one worker type worth watching.
 
 ## System prompt
 

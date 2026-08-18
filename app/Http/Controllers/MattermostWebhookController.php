@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Agent\Runner;
+use App\Jobs\ReplyOnMattermost;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class MattermostWebhookController extends Controller
 {
-    public function __invoke(Request $request, Runner $runner): Response
+    public function __invoke(Request $request): Response
     {
         $expected = (string) config('kit.webhook_token');
         $got = (string) $request->input('token', $request->header('X-Webhook-Token', ''));
@@ -31,28 +29,8 @@ class MattermostWebhookController extends Controller
         }
 
         $channel = (string) $request->input('channel_id', config('kit.mattermost.channel_id'));
-        $reply = $runner->say($channel !== '' ? $channel : 'mm', $text);
-        $this->post($channel, $reply);
+        ReplyOnMattermost::dispatch($channel !== '' ? $channel : 'mm', $text);
 
         return response('', 200);
-    }
-
-    private function post(string $channel, string $text): void
-    {
-        $url = rtrim((string) config('kit.mattermost.url'), '/');
-        $token = (string) config('kit.mattermost.token');
-        if ($url === '' || $token === '' || $channel === '') {
-            Log::warning('kit mm post skipped: missing url/token/channel');
-
-            return;
-        }
-
-        Http::timeout(20)
-            ->withToken($token)
-            ->acceptJson()
-            ->post($url.'/api/v4/posts', [
-                'channel_id' => $channel,
-                'message' => $text,
-            ]);
     }
 }
