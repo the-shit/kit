@@ -8,4 +8,4 @@ Loki-native factory agent. Sibling to Lexi, not a citizen in her process.
 - Catalog ids only. Never invent a gameplay GLB URL.
 - Files under ~300 lines.
 
-Ship gate: `php artisan test`.
+Ship gate: `php artisan test` + `vendor/bin/pint --test`. GitHub Actions (PHP 8.4) runs both. Required checks are convention-only on GitHub Free. No Blender / Playwright in CI.
