@@ -24,6 +24,7 @@
 /database/*.sqlite
 /database/*.sqlite-journal
 /storage/app/kit/memory.json
+/storage/app/kit/board.json
 /storage/app/kit/conversations
 /storage/app/kit/transcripts
 _ide_helper.php

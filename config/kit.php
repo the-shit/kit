@@ -8,6 +8,7 @@ return [
     'catalog_path' => env('KIT_CATALOG_PATH', '/home/jordan/projects/bikes-v2/public/models/catalog.json'),
     'look_report' => env('KIT_LOOK_REPORT', '/home/jordan/projects/bikes-v2/tmp/rider-look/report.json'),
     'status_path' => env('KIT_STATUS_PATH', '/home/jordan/.cache/kit/status.json'),
+    'board_path' => env('KIT_BOARD_PATH', storage_path('app/kit/board.json')),
     'memory_path' => env('KIT_MEMORY_PATH', storage_path('app/kit/memory.json')),
     'conversations_path' => env('KIT_CONVERSATIONS_PATH', storage_path('app/kit/conversations')),
     'kitd_health' => env('KIT_KITD_HEALTH', 'http://127.0.0.1:8787/health'),
