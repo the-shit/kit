@@ -23,6 +23,10 @@ return [
         'token' => env('KIT_MATTERMOST_TOKEN', ''),
         'user_id' => env('KIT_MATTERMOST_USER_ID', 'zdunkip7xjy1ukn9xd8wt5kqrc'),
         'jordan_user_id' => env('JORDAN_MATTERMOST_USER_ID', 'zh5bhphuqfdtffks1nys4e76ie'),
+        'lexi_user_id' => env('LEXI_MATTERMOST_USER_ID', '7satyicgxpfq5grdsuty9g3cuw'),
+        'team_id' => env('KIT_MATTERMOST_TEAM', 'dhoh8n1xkjfgzy7s63ufckb9ko'),
         'channel_id' => env('KIT_MATTERMOST_CHANNEL', '3r1tnxhe5fgcmjxgrspm7316oc'),
+        'hallway_id' => env('KIT_MATTERMOST_HALLWAY', '9sp18hgiaiybtj9p5nm8uw3sna'),
+        'dm_id' => env('KIT_MATTERMOST_DM', '3r1tnxhe5fgcmjxgrspm7316oc'),
     ],
 ];

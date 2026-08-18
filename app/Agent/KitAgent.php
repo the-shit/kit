@@ -5,6 +5,7 @@ namespace App\Agent;
 use App\Tools\AskLexi;
 use App\Tools\BoardWrite;
 use App\Tools\CatalogRead;
+use App\Tools\ChannelCreate;
 use App\Tools\HeartbeatRead;
 use App\Tools\LookReport;
 use App\Tools\MemorySearch;
@@ -28,6 +29,7 @@ class KitAgent extends BaseAgent
         return [
             new CatalogRead,
             new HeartbeatRead,
+            new ChannelCreate,
             new BoardWrite,
             new LookReport,
             new YouTubeTranscript,
