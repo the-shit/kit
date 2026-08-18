@@ -4,6 +4,10 @@ Kit chairs the factory. Lexi chairs the company. Neither clones the other.
 
 Jordan’s lock: ~10 specialists on Loki that collaborate. Kit does not implement new game dynamics. When stuck, Mattermost. Works when he is away.
 
+## Board
+
+Live lock is `storage/app/kit/board.json` (`BoardWrite` / `bin/board-write`, flock). `state` is a free string. Optional `lifecycle` is queued|wip|cut|pr|live|blocked. Snapshot wins over chat. Heartbeat slims that file. Grok sessions write the board; they do not speak as `@kit`.
+
 ## Company shape
 
 The product is **photo → catalog-ready GLB** (look report included). bikes-v2 is customer zero and the Steam demo. Agents are the shop floor, not the SKU. Do not sell an asset HTTP API until the factory is boring.
