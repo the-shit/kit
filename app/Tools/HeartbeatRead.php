@@ -19,7 +19,9 @@ readonly class HeartbeatRead implements Tool
 
     public function schema(JsonSchema $schema): array
     {
-        return [];
+        return [
+            'unused' => $schema->boolean()->nullable()->description('Unused. xAI rejects an empty properties object.'),
+        ];
     }
 
     public function handle(Request $request): Stringable|string

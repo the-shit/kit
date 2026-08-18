@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'provider' => env('AI_DEFAULT_PROVIDER', 'openrouter'),
-    'model' => env('KIT_MODEL', 'x-ai/grok-4.3'),
+    'provider' => env('AI_DEFAULT_PROVIDER', 'xai'),
+    'model' => env('KIT_MODEL', 'grok-4.6'),
 
     'bikes_v2' => env('KIT_BIKES_V2', '/home/jordan/projects/bikes-v2'),
     'catalog_path' => env('KIT_CATALOG_PATH', '/home/jordan/projects/bikes-v2/public/models/catalog.json'),
