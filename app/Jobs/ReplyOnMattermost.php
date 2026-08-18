@@ -11,7 +11,7 @@ class ReplyOnMattermost implements ShouldQueue
 {
     use Queueable;
 
-    public int $timeout = 180;
+    public int $timeout = 200;
 
     public int $tries = 2;
 

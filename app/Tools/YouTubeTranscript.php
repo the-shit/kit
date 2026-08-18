@@ -71,6 +71,7 @@ readonly class YouTubeTranscript implements Tool
             $line = trim($line);
             if (preg_match('/^(\d{2}:\d{2}:\d{2})\.\d+\s+-->/', $line, $m)) {
                 $time = $m[1];
+
                 continue;
             }
             if ($line === '' || str_starts_with($line, 'WEBVTT') || str_starts_with($line, 'NOTE') || preg_match('/^\d+$/', $line)) {

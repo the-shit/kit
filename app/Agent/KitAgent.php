@@ -12,7 +12,7 @@ use App\Tools\YouTubeTranscript;
 use Laravel\Ai\Attributes\Timeout;
 use Stringable;
 
-#[Timeout(180)]
+#[Timeout(200)]
 class KitAgent extends BaseAgent
 {
     public function __construct(private readonly PromptBuilder $prompts) {}

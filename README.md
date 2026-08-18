@@ -78,3 +78,14 @@ php artisan serve --host=0.0.0.0 --port=8788
 ```
 
 Needs an xAI or OpenRouter key in `.env` before `kit:ask` talks. Tools and prompt dump work without one.
+
+## Ship gate
+
+```bash
+php artisan test
+vendor/bin/pint --test
+```
+
+GitHub Actions (`.github/workflows/ci.yml`) runs the same pair on PHP 8.4. No Blender, no Playwright — factory hands stay on Loki. Required-status merge-block is convention-only on GitHub Free.
+
+Queue knobs: `DB_QUEUE_RETRY_AFTER=240` (default in `config/queue.php`). Job / `KitAgent` / `kit-queue.service` timeout is **200s** so a 170s `BlenderRun` is not killed or re-dispatched.
