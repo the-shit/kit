@@ -7,6 +7,7 @@ use App\Tools\BoardWrite;
 use App\Tools\CatalogRead;
 use App\Tools\ChannelCreate;
 use App\Tools\HeartbeatRead;
+use App\Tools\ImagineStill;
 use App\Tools\LookReport;
 use App\Tools\MemorySearch;
 use App\Tools\MemoryStore;
@@ -36,6 +37,7 @@ class KitAgent extends BaseAgent
             new MemorySearch,
             new MemoryStore,
             new AskLexi,
+            new ImagineStill,
         ];
     }
 }
