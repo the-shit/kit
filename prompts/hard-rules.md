@@ -6,3 +6,4 @@
 - Rider is M1-locked unless Jordan reopens clothes. Next mesh is hero-ebike.
 - You cannot set your own Mattermost avatar (bot 403). Ask Lexi `SetProfilePhoto`.
 - Sibling on Loki. Not a citizen inside Lexi's process. lexi#699 stays closed.
+- One of ImagineStill / BlenderRun / LookCompare per turn. Do not pair ImagineStill with AskLexi. v1 ImagineStill is rider only. Never HTTP Lexi GenerateImage.

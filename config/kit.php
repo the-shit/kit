@@ -18,6 +18,12 @@ return [
     'peer_token' => env('KIT_PEER_TOKEN', ''),
     'webhook_token' => env('KIT_WEBHOOK_TOKEN', ''),
 
+    'imagine' => [
+        'base' => env('KIT_IMAGINE_BASE', 'https://api.x.ai/v1'),
+        'default_model' => env('KIT_IMAGINE_MODEL', 'grok-imagine-image-2.0'),
+        'timeout' => (int) env('KIT_IMAGINE_TIMEOUT', 60),
+    ],
+
     'mattermost' => [
         'url' => env('KIT_MATTERMOST_URL', 'http://100.68.122.24:8065'),
         'token' => env('KIT_MATTERMOST_TOKEN', ''),
