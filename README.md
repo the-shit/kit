@@ -6,8 +6,8 @@ SDK: **[laravel/ai](https://laravel.com/docs/ai-sdk)** (`BaseAgent` + tools). We
 
 ```
 GET  /health
-POST /api/ask                  Bearer KIT_PEER_TOKEN  {"message":"..."}
-POST /api/assign               Bearer KIT_PEER_TOKEN  {"issue":"...","chair":"kit","brief":"..."}
+POST /api/ask                  Bearer KIT_PEER_TOKEN  {"message":"..."}  → Kit LLM (mouth)
+POST /api/assign               Bearer KIT_PEER_TOKEN  {issue?,chair?,brief?,kind?}  → board + queue, **no LLM**
 POST /api/webhooks/mattermost  token=KIT_WEBHOOK_TOKEN  → queues ReplyOnMattermost
 php artisan queue:work --queue=kit
 php artisan kit:ask "what's in the catalog?"

@@ -3,13 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Factory\Board;
-use App\Mattermost\Client;
+use App\Jobs\DispatchKitWork;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
+/**
+ * Asgard / Lexi factory door. No LLM. Enqueue + board row.
+ *
+ * POST /api/assign  Bearer KIT_PEER_TOKEN
+ * { issue?, chair?, brief?, kind? }
+ */
 class AssignController extends Controller
 {
-    public function __invoke(Request $request, Board $board, Client $mattermost): JsonResponse
+    public function __invoke(Request $request, Board $board): JsonResponse
     {
         $expected = (string) config('kit.peer_token');
         $got = (string) $request->bearerToken();
@@ -18,71 +24,84 @@ class AssignController extends Controller
         }
 
         $issue = trim((string) $request->input('issue', ''));
-        if ($issue === '') {
-            return response()->json(['error' => 'issue required'], 422);
-        }
-
+        $brief = trim((string) $request->input('brief', ''));
+        $kind = strtolower(trim((string) $request->input('kind', '')));
         $chair = strtolower(trim((string) $request->input('chair', 'kit')));
-        if (! in_array($chair, ['kit', 'feel', 'bench'], true)) {
+
+        if (! in_array($chair, ['kit', 'bench', 'feel'], true)) {
             $chair = 'kit';
         }
 
-        $number = $this->issueNumber($issue);
-        $id = $this->boardId($issue, $number, (string) $request->input('brief', ''));
-        $brief = trim((string) $request->input('brief', ''));
+        $issueNumber = $this->issueNumber($issue);
+        if ($issue === '' && $brief === '' && $kind === '') {
+            return response()->json(['error' => 'issue, brief, or kind required'], 422);
+        }
 
-        $item = $board->upsert($id, [
-            'state' => 'queued',
+        $boardId = $this->boardId($issueNumber, $kind, $brief, $issue);
+        $state = $kind !== '' ? $kind : 'queued';
+        $note = $brief !== '' ? $brief : ($issue !== '' ? $issue : $kind);
+
+        $fields = [
+            'state' => $state,
             'lifecycle' => 'queued',
             'owner' => $chair,
-            'issue' => $number,
-            'hops' => 0,
-            'note' => $brief !== '' ? $brief : 'assigned '.$issue,
-        ]);
+            'note' => $note,
+        ];
+        if ($issueNumber !== null) {
+            $fields['issue'] = $issueNumber;
+        }
 
-        $this->hallwayAck($mattermost, $id, $issue, $chair);
+        $item = $board->upsert($boardId, $fields);
+
+        DispatchKitWork::dispatch(
+            boardId: $boardId,
+            chair: $chair,
+            brief: $note,
+            issue: $issue,
+            kind: $kind,
+        );
 
         return response()->json([
             'ok' => true,
-            'board_id' => $id,
+            'board_id' => $boardId,
+            'chair' => $chair,
             'item' => $item,
-        ]);
+        ], 202);
     }
 
-    private function issueNumber(string $issue): int
+    private function issueNumber(string $issue): ?int
     {
+        if ($issue === '') {
+            return null;
+        }
         if (preg_match('/#(\d+)/', $issue, $m) === 1) {
             return (int) $m[1];
         }
         if (preg_match('/\/issues\/(\d+)/', $issue, $m) === 1) {
             return (int) $m[1];
         }
+        if (ctype_digit($issue)) {
+            return (int) $issue;
+        }
 
-        return (int) $issue;
+        return null;
     }
 
-    private function boardId(string $issue, int $number, string $brief): string
+    private function boardId(?int $issueNumber, string $kind, string $brief, string $issue): string
     {
-        $hay = strtolower($issue.' '.$brief);
+        $hay = strtolower($issue.' '.$brief.' '.$kind);
         foreach (['rider', 'hero-ebike', 'ranch-7620'] as $catalog) {
             if (str_contains($hay, $catalog)) {
                 return $catalog;
             }
         }
-
-        return $number > 0 ? 'issue-'.$number : 'assign';
-    }
-
-    private function hallwayAck(Client $mattermost, string $id, string $issue, string $chair): void
-    {
-        $hallway = (string) config('kit.mattermost.hallway_id');
-        $dm = (string) config('kit.mattermost.dm_id');
-        if ($hallway === '' || $hallway === $dm) {
-            return;
+        if ($issueNumber !== null) {
+            return 'issue-'.$issueNumber;
+        }
+        if ($kind !== '') {
+            return $kind;
         }
 
-        $short = $number = $this->issueNumber($issue);
-        $ref = $short > 0 ? '#'.$short : $issue;
-        $mattermost->post($hallway, 'queued '.$id.' ← '.$ref.' ('.$chair.')');
+        return 'assign-'.substr(sha1($brief), 0, 8);
     }
 }
