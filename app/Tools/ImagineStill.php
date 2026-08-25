@@ -3,6 +3,8 @@
 namespace App\Tools;
 
 use App\Factory\Board;
+use App\Factory\VramOccupancy;
+use App\Imaging\ForgeClient;
 use App\Imaging\ImagineClient;
 use App\Imaging\RefStore;
 use Illuminate\Contracts\JsonSchema\JsonSchema;
@@ -17,7 +19,7 @@ readonly class ImagineStill implements Tool
     {
         return 'Edit a rider factory still onto bikes-v2 disk (_wip only). '
             .'v1: catalog_id=rider, view=front|side|back|ride. '
-            .'Reference-first Imagine edit (Jordan photos). No VRAM. '
+            .'Default backend=imagine (Jordan photos, no VRAM). backend=forge is optional I4 (JuggernautXL_v9). '
             .'Does not cut a GLB, HTTP Lexi, touch board id=rider, or overwrite sheet/hero. '
             .'One stills call per turn. Do not pair with BlenderRun, LookCompare, or AskLexi.';
     }
@@ -29,12 +31,12 @@ readonly class ImagineStill implements Tool
             'view' => $schema->string()->description('front|side|back|ride')->required(),
             'issue' => $schema->integer()->description('bikes-v2 SKU issue (12 for rider). Tool ticket is kit#5.')->required(),
             'prompt' => $schema->string()->description('Camera/lighting only. Body lock is injected.'),
-            'backend' => $schema->string()->description('imagine only in I2. forge is I4.'),
+            'backend' => $schema->string()->description('imagine (default) | forge. forge uses localhost:7860 JuggernautXL_v9.'),
             'mode' => $schema->string()->description('edit (default) | gen. gen on rider requires force_fresh.'),
             'ref_paths' => $schema->array()->description('Optional extra filenames under tools/models/rider/refs/. Max 3 with the canonical.'),
             'replace_canonical' => $schema->boolean()->description('v1 ignored / refuse. Always write _wip/.'),
-            'model' => $schema->string()->description('grok-imagine-image-2.0 (default) | grok-imagine-image | grok-imagine-image-quality.'),
-            'resolution' => $schema->string()->description('1k (default) | 2k. Lowercase tokens only.'),
+            'model' => $schema->string()->description('imagine: grok-imagine-image-2.0 (default). forge: always juggernautXL_v9.'),
+            'resolution' => $schema->string()->description('1k (default) | 2k. Lowercase tokens only. imagine only.'),
             'aspect_ratio' => $schema->string()->description('Override. Default 3:4 portraits / 16:9 ride.'),
             'force_fresh' => $schema->boolean()->description('Allow /generations on rider. Default false. Refuse unless true.'),
         ];
@@ -73,8 +75,11 @@ readonly class ImagineStill implements Tool
         }
 
         $backend = strtolower(trim((string) ($request['backend'] ?? 'imagine')));
-        if ($backend !== '' && $backend !== 'imagine') {
-            return 'I2 backend=imagine only (forge is I4)';
+        if ($backend === '') {
+            $backend = 'imagine';
+        }
+        if (! in_array($backend, ['imagine', 'forge'], true)) {
+            return 'backend must be imagine or forge';
         }
 
         $mode = strtolower(trim((string) ($request['mode'] ?? 'edit')));
@@ -86,9 +91,18 @@ readonly class ImagineStill implements Tool
             $mode = 'edit';
         }
 
-        $client = app(ImagineClient::class);
-        $model = trim((string) ($request['model'] ?? '')) ?: (string) config('kit.imagine.default_model', 'grok-imagine-image-2.0');
-        $resolution = $client->resolution((string) ($request['resolution'] ?? '1k'));
+        if ($backend === 'forge') {
+            $gpu = app(VramOccupancy::class)->status()['gpu'] ?? 'free';
+            if ($gpu === 'blender') {
+                return 'blender in flight — retry forge stills after the cut (no HTTP)';
+            }
+        }
+
+        $imagine = app(ImagineClient::class);
+        $model = $backend === 'forge'
+            ? ForgeClient::CHECKPOINT
+            : (trim((string) ($request['model'] ?? '')) ?: (string) config('kit.imagine.default_model', 'grok-imagine-image-2.0'));
+        $resolution = $imagine->resolution((string) ($request['resolution'] ?? '1k'));
         $aspect = trim((string) ($request['aspect_ratio'] ?? '')) ?: $map['aspect'];
         $camera = trim((string) ($request['prompt'] ?? ''));
         $extras = $this->names($request['ref_paths'] ?? []);
@@ -96,12 +110,14 @@ readonly class ImagineStill implements Tool
         $prompt = $this->lockPrompt($view, count($paths), $camera);
         $before = $store->protectHashes();
 
-        $bytes = $mode === 'gen'
-            ? $client->generate($prompt, $aspect, $resolution, $model)
-            : $client->edit($prompt, $paths, $aspect, $resolution, $model);
+        $bytes = $backend === 'forge'
+            ? $this->forgeBytes($mode, $prompt, $aspect, $paths)
+            : ($mode === 'gen'
+                ? $imagine->generate($prompt, $aspect, $resolution, $model)
+                : $imagine->edit($prompt, $paths, $aspect, $resolution, $model));
 
         $written = $store->writeWip($view, $bytes, [
-            'backend' => 'imagine',
+            'backend' => $backend,
             'model' => $model,
             'issue' => $issue,
             'refs_used' => array_map('basename', $paths),
@@ -124,11 +140,26 @@ readonly class ImagineStill implements Tool
             'path' => $written['path'],
             'sha256' => $written['sha256'],
             'bytes' => $written['bytes'],
-            'backend' => 'imagine',
+            'backend' => $backend,
             'model' => $model,
             'issue' => $issue,
             'refs_used' => array_map('basename', $paths),
         ], JSON_UNESCAPED_SLASHES) ?: 'wrote still';
+    }
+
+    /**
+     * @param  list<string>  $paths
+     */
+    private function forgeBytes(string $mode, string $prompt, string $aspect, array $paths): string
+    {
+        $client = app(ForgeClient::class);
+        if ($mode === 'gen') {
+            return $client->txt2img($prompt, $aspect);
+        }
+
+        $init = (string) file_get_contents($paths[0]);
+
+        return $client->img2img($prompt, $init, $aspect, $client->denoiseFor($paths[0]));
     }
 
     private function lockPrompt(string $view, int $n, string $camera): string

@@ -24,6 +24,16 @@ return [
         'timeout' => (int) env('KIT_IMAGINE_TIMEOUT', 60),
     ],
 
+    'forge' => [
+        'url' => env('SD_FORGE_URL', env('KIT_FORGE_URL', 'http://127.0.0.1:7860')),
+        'timeout' => (int) env('SD_FORGE_TIMEOUT', 180),
+        'checkpoint' => env('KIT_FORGE_CHECKPOINT', 'juggernautXL_v9'),
+    ],
+
+    'gpu' => [
+        'fake_status' => env('KIT_GPU_FAKE_STATUS'),
+    ],
+
     'mattermost' => [
         'url' => env('KIT_MATTERMOST_URL', 'http://100.68.122.24:8065'),
         'token' => env('KIT_MATTERMOST_TOKEN', ''),
