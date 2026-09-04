@@ -26,5 +26,8 @@ test('instructions include identity, rules, mission, and live catalog', function
         ->toContain('focus: hero-ebike')
         ->toContain('not a Lexi citizen')
         ->toContain('board: ranch-7620=cut')
-        ->toContain('Snapshot is truth');
+        ->toContain('Snapshot is truth')
+        ->toContain('1 Blender unit = 1 meter')
+        ->toContain('Cube.001')
+        ->toContain('[CatalogRead]');
 });

@@ -24,6 +24,7 @@ Four layers, assembled every turn by `App\Agent\PromptBuilder`:
 |---|---|---|
 | Identity | `identities/kit.json` | Rarely. Birth cert. |
 | Hard rules | `prompts/hard-rules.md` | When Jordan locks taste. |
+| Model | `prompts/model.md` | How to cut a catalog mesh. v1: lesson, not BlenderRun. |
 | Mission | `prompts/mission.md` | Voice + job. |
 | Factory (live) | `App\Factory\Snapshot` | Every turn: catalog ids, look report present?, kitd/vite/blender, bikes-v2 branch. |
 | Memory | `storage/app/kit/memory.json` | Pinned facts (`MemoryStore`). |
