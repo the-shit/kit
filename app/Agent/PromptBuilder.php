@@ -21,6 +21,7 @@ class PromptBuilder
             "Today is {$now->toDateString()} ({$now->format('l, F j g:ia T')}).",
             "## Identity\n".$this->identityBlock(),
             "## Hard rules\n".$this->file('prompts/hard-rules.md'),
+            "## Model\n".$this->file('prompts/model.md'),
             "## Factory (live)\n".$this->snapshot->render(),
             "## Memory (pinned)\n".$this->memory->render(8),
         ];
